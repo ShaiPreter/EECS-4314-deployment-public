@@ -21,7 +21,7 @@ router.post('/register', (req, res) => {
     //const email = req.body.email;
     //const password = req.body.password;
     //const password2 = req.body.password2;
-    //console.log(req.body);
+    console.log(req.body);
     let errors = [];
 
     if (!name || !email || !password || !password2) {
@@ -49,6 +49,7 @@ router.post('/register', (req, res) => {
         User.findOne({ email: email }).then(user => {
             if (user) {
                 errors.push({ msg: 'Email already exists' });
+                console.log(errors)
                 res.json(errors);
             } else {
                 const newUser = new User({
@@ -65,9 +66,13 @@ router.post('/register', (req, res) => {
                         newUser
                             .save()
                             .then(user => {
+                                console.log(err)
                                 res.json(user);
                             })
-                            .catch(err => console.log(err));
+                            .catch(err => {
+                                console.log(err);
+                                res.json(err);
+                            });
                     });
                 });
             }
@@ -93,14 +98,16 @@ router.put('/update', (req, res, next) => {
         _id: mongoose.Types.ObjectId(req.body._id),
 
     };
+    console.log(req.body)
 
 
     User.findOneAndUpdate(user, req.body, {new: true}, (err,doc) => {
         if (err) {
-            return res.json(err)
+            console.log(err)
+            res.json(err)
         }
-
-        return res.json(doc)
+        console.log(doc)
+        res.json(doc)
     });
 
 });

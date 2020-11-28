@@ -21,7 +21,7 @@ router.post('/register', (req, res) => {
     //const email = req.body.email;
     //const password = req.body.password;
     //const password2 = req.body.password2;
-    console.log(req.body);
+    console.log("Body:" + req.body);
     let errors = [];
 
     if (!name || !email || !password || !password2) {
@@ -49,7 +49,7 @@ router.post('/register', (req, res) => {
         User.findOne({ email: email }).then(user => {
             if (user) {
                 errors.push({ msg: 'Email already exists' });
-                console.log(errors)
+                console.log("Errors:" + errors)
                 res.json(errors);
             } else {
                 const newUser = new User({
@@ -66,11 +66,11 @@ router.post('/register', (req, res) => {
                         newUser
                             .save()
                             .then(user => {
-                                console.log(err)
+                                console.log("Response:" + user)
                                 res.json(user);
                             })
                             .catch(err => {
-                                console.log(err);
+                                console.log("Errors:" + err);
                                 res.json(err);
                             });
                     });
@@ -98,15 +98,15 @@ router.put('/update', (req, res, next) => {
         _id: mongoose.Types.ObjectId(req.body._id),
 
     };
-    console.log(req.body)
+    console.log("Body:" + req.body)
 
 
     User.findOneAndUpdate(user, req.body, {new: true}, (err,doc) => {
         if (err) {
             console.log(err)
-            res.json(err)
+            res.json("Errors:" + err)
         }
-        console.log(doc)
+        console.log("Response:" + doc)
         res.json(doc)
     });
 
@@ -122,13 +122,14 @@ router.get('/logout', (req, res) => {
 
 
 router.get("/find", (req,res) => {
+    console.log("Parameters:"+ req.query)
     User.findById(req.query._id, "name image _id", {lean: true}, (err,user) => {
         if(err){
-            console.log(err);
+            console.log("Errors:" + err);
             res.json(err);
         }
         else{
-            res.json(user)
+            res.json("Response:" + user)
         }
     })
 });
@@ -136,16 +137,15 @@ router.get("/find", (req,res) => {
 router.put("/followClub", (req,res) => {
     let student = req.body.student;
     student.clubsFollowed.push(mongoose.Types.ObjectId(req.body.clubId));
-    console.log(student);
-    console.log(req.body.clubId);
+    console.log("Body:" + req.body);
 
     User.findOneAndUpdate({_id: mongoose.Types.ObjectId(student._id)}, student, {new:true}, (err,result)=>{
         if(err){
-            console.log(err);
+            console.log("Errors:" + err);
             res.json(err);
         }
         else{
-            res.json(result)
+            res.json("Response:" + result)
         }
     })
 });
